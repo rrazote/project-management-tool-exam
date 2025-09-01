@@ -28,7 +28,7 @@ public interface TaskDocumentedController {
 					array = @ArraySchema(schema = @Schema(implementation = TaskDto.class))))
 	@GetMapping("/due-date")
 	public ResponseEntity<List<TaskDto>> getAllTasksByDueDateSorted(
-			@RequestParam(required = false) String project,
+			@RequestParam(required = false) Long project,
 			@RequestParam(name = "start_due_date", required = false) ZonedDateTime startDueDate,
 			@RequestParam(name = "end_due_date", required = false) ZonedDateTime endDueDate,
 			@RequestParam(name = "sort_by", defaultValue = "DUEDATE") TaskSortEnum sortBy,

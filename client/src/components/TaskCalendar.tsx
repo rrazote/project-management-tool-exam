@@ -3,33 +3,45 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import dayjs from 'dayjs';
 import { useAppContext } from '../context/AppContext';
+import '../css/TaskCalendar.css';
+import { Box } from '@mui/material';
 
 const TaskCalendar = () => {
-  const { tasks } = useAppContext();
-  // Convert tasks to FullCalendar event format
-  const events = tasks.map((task) => ({
-    id: task.id.toString(),
-    title: task.name,
-    date: dayjs(task.due_date).format('YYYY-MM-DD'),
-  }));
+	const { tasks, handleSelectedTask } = useAppContext();
+	// Convert tasks to FullCalendar event format
+	const events = tasks.map((task) => ({
+		id: task.id.toString(),
+		title: task.name,
+		date: dayjs(task.due_date).format('YYYY-MM-DD'),
+		task: task,
+	}));
 
-  return (
-    <div style={{ height: '100%', width: '100%' }}>
-      <FullCalendar
-        plugins={[dayGridPlugin, timeGridPlugin]}
-        initialView='dayGridMonth'
-        headerToolbar={{
-          left: 'prev,next today',
-          center: 'title',
-          right: 'dayGridMonth,timeGridWeek,timeGridDay',
-        }}
-        events={events}
-        eventClick={(info) => {
-          alert(`Task: ${info.event.title}`);
-        }}
-      />
-    </div>
-  );
+	const handleDateSelect = (selectInfo: any) => {
+		const start = dayjs(selectInfo.start).format('YYYY-MM-DD');
+		const end = dayjs(selectInfo.end).subtract(1, 'day').format('YYYY-MM-DD'); // fullCalendar's end is exclusive
+		alert(`Selected date: ${start}${start !== end ? ` to ${end}` : ''}`);
+	};
+
+	return (
+		<Box>
+			<FullCalendar
+				plugins={[dayGridPlugin, timeGridPlugin]}
+				initialView='dayGridMonth'
+				headerToolbar={{
+					left: 'prev,today,next',
+					center: 'title',
+					right: 'dayGridMonth,timeGridWeek,timeGridDay',
+				}}
+				events={events}
+				selectable={true}
+				select={handleDateSelect}
+				eventClick={(info) => {
+					const clickedTask = info.event.extendedProps.task;
+					handleSelectedTask(clickedTask);
+				}}
+			/>
+		</Box>
+	);
 };
 
 export default TaskCalendar;

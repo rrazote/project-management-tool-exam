@@ -1,6 +1,17 @@
 import type { Dayjs } from 'dayjs';
 import dayjs from 'dayjs';
 
+export interface ISearchFilter {
+  project?: number | "" | undefined;
+  start_due_date?: string | null;
+  end_due_date?: string | null;
+}
+
+export interface IProject {
+  id: number;
+  name: string;
+}
+
 export interface ITask {
   id: number;
   project: string;
@@ -17,7 +28,7 @@ export interface IError {
   timestamp: string;
 }
 
-export const defaultTask: ITask = {
+export const DEFAULT_TASK: ITask = {
   id: 0,
   project: '',
   name: '',
@@ -37,8 +48,11 @@ export const STATUS: { [key: string]: string } = {
   PENDING: 'Pending',
 };
 
-const TASK_API_URL = 'http://localhost:8080/api/tasks';
+const SERVER_URL = 'http://localhost:8080';
+const TASK_API_URL = `${SERVER_URL}/api/tasks`;
+const PROJECT_API_URL = `${SERVER_URL}/api/projects`;
 export const TASK_GET_API_URL = `${TASK_API_URL}/due-date`;
 export const TASK_POST_API_URL = `${TASK_API_URL}/new`;
 export const TASK_PUT_API_URL = `${TASK_API_URL}/update-task`;
 export const TASK_DELETE_API_URL = `${TASK_API_URL}/delete`;
+export const PROJECT_GET_API_URL = `${PROJECT_API_URL}/`;

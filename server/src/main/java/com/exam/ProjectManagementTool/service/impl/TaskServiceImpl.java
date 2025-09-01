@@ -28,7 +28,7 @@ public class TaskServiceImpl implements TaskService {
 	@Transactional(readOnly = true)
 	@Override
 	public List<TaskDto> getAllTaskByDueDateRange(
-			String project, ZonedDateTime startDueDate, ZonedDateTime endDueDate,
+			Long project, ZonedDateTime startDueDate, ZonedDateTime endDueDate,
 			TaskSortEnum sortBy, boolean sortAsc
 	) {
 		List<TaskEntity> taskEntities;

@@ -13,11 +13,12 @@ import java.util.List;
 @Repository
 public interface TaskRepository extends JpaRepository<TaskEntity, Long> {
 	@Query("SELECT te FROM TaskEntity te " +
-			"WHERE (:startDueDate IS NULL OR te.dueDate >= :startDueDate) " +
-			"AND (:endDueDate IS NULL OR te.dueDate <= :endDueDate) " +
-			"AND (:project IS NULL OR te.project = :project)")
-	List<TaskEntity> findByOptions(@Param("project") String project,
-																 @Param("startDueDate") ZonedDateTime startDueDate,
-																 @Param("endDueDate") ZonedDateTime endDueDate,
-																 Sort sort);
+		"JOIN FETCH te.project pe " +
+		"WHERE (:startDueDate IS NULL OR te.dueDate >= :startDueDate) " +
+		"AND (:endDueDate IS NULL OR te.dueDate <= :endDueDate) " +
+		"AND (:project IS NULL OR pe.id = :project)")
+	List<TaskEntity> findByOptions(@Param("project") Long project,
+		 @Param("startDueDate") ZonedDateTime startDueDate,
+		 @Param("endDueDate") ZonedDateTime endDueDate,
+		 Sort sort);
 }

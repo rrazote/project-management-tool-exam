@@ -8,7 +8,7 @@ import java.time.ZonedDateTime;
 import java.util.List;
 
 public interface TaskService {
-	List<TaskDto> getAllTaskByDueDateRange(String project, ZonedDateTime startDueDate, ZonedDateTime endDueDate, TaskSortEnum sortBy, boolean sortAsc);
+	List<TaskDto> getAllTaskByDueDateRange(Long project, ZonedDateTime startDueDate, ZonedDateTime endDueDate, TaskSortEnum sortBy, boolean sortAsc);
 
 	TaskDto createNewTask(TaskRequestDto newTask);
 

@@ -20,7 +20,7 @@ public class TaskController implements TaskDocumentedController {
 
 	@Override
 	public ResponseEntity<List<TaskDto>> getAllTasksByDueDateSorted(
-			String project,
+			Long project,
 			ZonedDateTime startDueDate,
 			ZonedDateTime endDueDate,
 			TaskSortEnum sortBy,
