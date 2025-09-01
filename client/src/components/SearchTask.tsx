@@ -27,19 +27,33 @@ const SearchTask: React.FC<SearchTaskProps> = ({ open, closeDialog }) => {
 	const [project, setProject] = useState<number | '' | undefined>('');
 	const [startDate, setStartDate] = useState<Dayjs | null>(null);
 	const [endDate, setEndDate] = useState<Dayjs | null>(null);
+	const [sortBy, setSortBy] = useState<'DUEDATE' | 'PRIORITY'>('DUEDATE');
+	const [sortOrder, setSortOrder] = useState<'ASC' | 'DESC'>('ASC');
 	const { projects, fetchTasks } = useAppContext();
 
 	const handleProjectChange = (event: SelectChangeEvent<number | ''>) => {
 		setProject(event.target.value as number | '');
 	};
 
+	const handleSortByChange = (event: SelectChangeEvent<'DUEDATE' | 'PRIORITY'>) => {
+		setSortBy(event.target.value as 'DUEDATE' | 'PRIORITY');
+	};
+
+	const handleSortOrderChange = (event: SelectChangeEvent<'ASC' | 'DESC'>) => {
+		setSortOrder(event.target.value as 'ASC' | 'DESC');
+	};
+
 	const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
-		fetchTasks({
-			project,
-			start_due_date: startDate ? new Date(startDate.format('YYYY/MM/DD')).toISOString() : null,
-			end_due_date: endDate ? new Date(endDate.format('YYYY/MM/DD')).toISOString() : null,
-		});
+		fetchTasks(
+			{
+				project,
+				start_due_date: startDate ? new Date(startDate.format('YYYY/MM/DD')).toISOString() : null,
+				end_due_date: endDate ? new Date(endDate.format('YYYY/MM/DD')).toISOString() : null,
+			},
+			sortBy,
+			sortOrder === 'ASC' ? true : false
+		);
 		setProject('');
 		setStartDate(null);
 		setEndDate(null);
@@ -52,7 +66,6 @@ const SearchTask: React.FC<SearchTaskProps> = ({ open, closeDialog }) => {
 			<form onSubmit={handleSubmit}>
 				<DialogContent>
 					<Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, marginTop: 1 }}>
-						{/* Project Select */}
 						<FormControl fullWidth>
 							<InputLabel id='project-label'>Project</InputLabel>
 							<Select labelId='project-label' value={project} onChange={handleProjectChange} label='Project'>
@@ -69,7 +82,6 @@ const SearchTask: React.FC<SearchTaskProps> = ({ open, closeDialog }) => {
 
 						<Divider orientation='horizontal' flexItem />
 
-						{/* Start Due Date */}
 						<LocalizationProvider dateAdapter={AdapterDayjs}>
 							<DatePicker
 								label='Start Due Date'
@@ -79,7 +91,6 @@ const SearchTask: React.FC<SearchTaskProps> = ({ open, closeDialog }) => {
 							/>
 						</LocalizationProvider>
 
-						{/* End Due Date */}
 						<LocalizationProvider dateAdapter={AdapterDayjs}>
 							<DatePicker
 								label='End Due Date'
@@ -90,6 +101,22 @@ const SearchTask: React.FC<SearchTaskProps> = ({ open, closeDialog }) => {
 								minDate={startDate || undefined}
 							/>
 						</LocalizationProvider>
+
+						<FormControl fullWidth>
+							<InputLabel id='project-label'>Sort By</InputLabel>
+							<Select labelId='project-label' value={sortBy} onChange={handleSortByChange} label='Project'>
+								<MenuItem value='DUEDATE'>Due Date</MenuItem>
+								<MenuItem value='PRIORITY'>Priority</MenuItem>
+							</Select>
+						</FormControl>
+
+						<FormControl fullWidth>
+							<InputLabel id='project-label'>Sort Order</InputLabel>
+							<Select labelId='project-label' value={sortOrder} onChange={handleSortOrderChange} label='Project'>
+								<MenuItem value='ASC'>Ascending</MenuItem>
+								<MenuItem value='DESC'>Descending</MenuItem>
+							</Select>
+						</FormControl>
 					</Box>
 				</DialogContent>
 
